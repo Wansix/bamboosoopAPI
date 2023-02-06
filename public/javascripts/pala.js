@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 
 const UNIT = 1_000_000_000_000_000_000;
 
@@ -8,18 +8,20 @@ const UNIT = 1_000_000_000_000_000_000;
  */
 async function getInfo(url) {
   const response = await axios(url, {
-    "headers": {
-      "accept": "application/json, text/plain, */*",
+    headers: {
+      accept: "application/json, text/plain, */*",
     },
-      "method": "GET"
+    method: "GET",
   });
   const item = response?.data;
-  
-  const floor = Math.floor((item?.floorPriceInKlay) / UNIT);
-  const volume =  Math.floor((item?.volumeTraded) / UNIT);
+
+  const floor = Math.floor(item?.floorPriceInKlay / UNIT);
+  const volume = Math.floor(item?.volumeTraded / UNIT);
   const numOfOwners = item?.numOfOwners;
   const numOfTokens = item?.numOfTokens;
-  const score = Math.floor(( volume * 0.0001 ) + ( floor * 0.5 ) + ( numOfOwners * 0.7 ) - ( numOfTokens * 0.0001 ))
+  const score = Math.floor(
+    volume * 0.0001 + floor * 0.5 + numOfOwners * 0.7 - numOfTokens * 0.0001
+  );
 
   return {
     name: item?.name,
@@ -29,8 +31,8 @@ async function getInfo(url) {
     floor: floor,
     volume: volume,
     numOfOwners: numOfOwners,
-    numOfTokens: numOfTokens
-  }
+    numOfTokens: numOfTokens,
+  };
 }
 
 /**
@@ -38,11 +40,10 @@ async function getInfo(url) {
  * @type { (urls: Array) => Array }
  */
 async function createExportData(urls) {
-
   const projectList = [];
 
   // 프로젝트 병합
-  for(let i = 0; i < urls.length; i++) {
+  for (let i = 0; i < urls.length; i++) {
     const result = await getInfo(urls[i]);
     projectList.push(result);
   }
@@ -53,8 +54,8 @@ async function createExportData(urls) {
   });
 
   return {
-    data: projectList
-  }
+    data: projectList,
+  };
 }
 
 module.exports = { getInfo, createExportData };
