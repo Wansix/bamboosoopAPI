@@ -28,6 +28,7 @@ getRankinglist();
 const setRankinglistTime = 1000 * 60 * 60; // 1시간 단위
 setInterval(function () {
   console.log("getRankingList!");
+  getRankinglist();
 }, setRankinglistTime);
 
 /**
