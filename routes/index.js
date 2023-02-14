@@ -21,13 +21,17 @@ const getRankinglist = async () => {
   projectList = await createExportData(projectUrls);
 };
 
-//서버 시작시 한 번 랭킹 리스트 받아옴.
-getRankinglist();
+const init = () => {
+  getRankinglist();
+};
+
+// 서버 시작시 처음 한 번 실행되는 함수들.
+init();
 
 // 주기적으로 ranking list set up
 const setRankinglistTime = 1000 * 60 * 60; // 1시간 단위
 setInterval(function () {
-  console.log("getRankingList!");
+  // console.log("getRankingList!");
   getRankinglist();
 }, setRankinglistTime);
 
