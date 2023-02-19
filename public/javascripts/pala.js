@@ -43,7 +43,8 @@ async function getInfo(url, volumeList) {
   const numOfOwners = item?.numOfOwners;
   const numOfTokens = item?.numOfTokens;
   const score = Math.floor(
-    volume * 0.0001 + floor * 0.5 + numOfOwners * 0.7 - numOfTokens * 0.0001
+    volume * 0.003 + (floor * numOfTokens * 5) / 100000 + numOfOwners * 0.6
+    // volume * 0.0001 + floor * 0.5 + numOfOwners * 0.7 - numOfTokens * 0.0001
   );
 
   return {
@@ -94,7 +95,7 @@ const checkContractAddress = (_address) => {
 };
 
 const getTotalPages = async (_chartLimit) => {
-  const chart7dayUrl = `https://klaytn.api.pala.world/projects/chart?page=1&limit=${_chartLimit}&order_by=volumeTraded.desc&date_duration=7&category=all`;
+  const chart7dayUrl = `https://klaytn.api.pala.world/v2/projects/chart?page=1&limit=${_chartLimit}&order_by=volumeTraded.desc&date_duration=7&category=all`;
   const response = await axios(chart7dayUrl, {
     headers: {
       accept: "application/json, text/plain, */*",
@@ -115,7 +116,7 @@ const getChart7days = async () => {
   const totalPages = await getTotalPages(chartLimit);
 
   for (let i = 1; i <= totalPages; i++) {
-    const chart7dayUrl = `https://klaytn.api.pala.world/projects/chart?page=${i}&limit=${chartLimit}&order_by=volumeTraded.desc&date_duration=7&category=all`;
+    const chart7dayUrl = `https://klaytn.api.pala.world/v2/projects/chart?page=${i}&limit=${chartLimit}&order_by=volumeTraded.desc&date_duration=7&category=all`;
     const response = await axios(chart7dayUrl, {
       headers: {
         accept: "application/json, text/plain, */*",
@@ -127,7 +128,7 @@ const getChart7days = async () => {
     const items = data.items;
 
     items.forEach((element) => {
-      const contractAddress = element.projectContractAddress;
+      const contractAddress = element.contractAddress;
       const volume7days = Math.floor(element?.volumeTraded / UNIT);
 
       if (checkContractAddress(contractAddress)) {
