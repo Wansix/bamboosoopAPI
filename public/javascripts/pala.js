@@ -43,7 +43,7 @@ async function getInfo(url, volumeList) {
   const numOfOwners = item?.numOfOwners;
   const numOfTokens = item?.numOfTokens;
   const score = Math.floor(
-    volume * 0.003 + (floor * numOfTokens * 5) / 100000 + numOfOwners * 0.56
+    volume * 0.003 + (floor * numOfTokens * 5) / 100000 + numOfOwners * 0.4
     // volume * 0.0001 + floor * 0.5 + numOfOwners * 0.7 - numOfTokens * 0.0001
   );
 
