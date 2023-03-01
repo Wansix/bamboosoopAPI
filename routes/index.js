@@ -37,12 +37,13 @@ init();
 // 주기적으로 ranking list set up
 const setRankinglistTime = 1000 * 60 * 60; // 1시간 단위
 setInterval(function () {
-  // console.log("getRankingList!");
   getRankinglist();
 }, setRankinglistTime);
 
 const setKlayPriceCheckTime = 1000 * 60 * 15; // 15분 단위
-setInterval(function () {}, setKlayPriceCheckTime);
+setInterval(async function () {
+  klayPrice = await getKlayPrice();
+}, setKlayPriceCheckTime);
 
 /**
  * @path {GET} http://localhost:3000
