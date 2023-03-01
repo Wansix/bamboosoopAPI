@@ -1,8 +1,13 @@
 var express = require("express");
 var router = express.Router();
-const { getInfo, createExportData } = require("../public/javascripts/pala.js");
+const {
+  getInfo,
+  createExportData,
+  getKlayPrice,
+} = require("../public/javascripts/pala.js");
 
 let projectList = [];
+let klayPrice = 0;
 
 const getRankinglist = async () => {
   const projectUrls = [
@@ -21,8 +26,9 @@ const getRankinglist = async () => {
   projectList = await createExportData(projectUrls);
 };
 
-const init = () => {
+const init = async () => {
   getRankinglist();
+  klayPrice = await getKlayPrice();
 };
 
 // 서버 시작시 처음 한 번 실행되는 함수들.
@@ -34,6 +40,9 @@ setInterval(function () {
   // console.log("getRankingList!");
   getRankinglist();
 }, setRankinglistTime);
+
+const setKlayPriceCheckTime = 1000 * 60 * 15; // 15분 단위
+setInterval(function () {}, setKlayPriceCheckTime);
 
 /**
  * @path {GET} http://localhost:3000
@@ -67,6 +76,10 @@ router.get("/api/ranking", async (req, res, next) => {
   }
 
   res.json(result);
+});
+
+router.get("/api/klayPrice", async (req, res, next) => {
+  res.json(klayPrice);
 });
 
 module.exports = router;
