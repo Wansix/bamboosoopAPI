@@ -24,15 +24,30 @@ const getRankinglist = async () => {
   ];
 
   projectList = await createExportData(projectUrls);
+  return projectList;
 };
 
 const init = async () => {
-  getRankinglist();
-  // klayPrice = await getKlayPrice();
+  await getRankinglist();
+
+  await updateDayPrice();
+
+  klayPrice = await getKlayPrice();
 };
 
 // 서버 시작시 처음 한 번 실행되는 함수들.
 init();
+
+const updateDayPrice = async () => {
+  const result = await getRankinglist();
+  const list = result.data;
+
+  console.log(list);
+
+  for (let i = 0; i < list.length; i++) {
+    console.log(list[i].name, list[i].contractAddress, list[i].floor);
+  }
+};
 
 // 주기적으로 ranking list set up
 const setRankinglistTime = 1000 * 60 * 60; // 1시간 단위
@@ -42,7 +57,7 @@ setInterval(function () {
 
 const setKlayPriceCheckTime = 1000 * 60 * 15; // 15분 단위
 setInterval(async function () {
-  // klayPrice = await getKlayPrice();
+  klayPrice = await getKlayPrice();
 }, setKlayPriceCheckTime);
 
 const setDayPriceCheckTime = 1000;
@@ -51,7 +66,7 @@ setInterval(async function () {
   let date = today.getDate();
   let hour = today.getHours();
 
-  console.log(date, hour);
+  // console.log(date, hour);
 }, setDayPriceCheckTime);
 
 /**
