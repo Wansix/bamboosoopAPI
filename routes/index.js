@@ -28,7 +28,7 @@ const getRankinglist = async () => {
 
 const init = async () => {
   getRankinglist();
-  klayPrice = await getKlayPrice();
+  // klayPrice = await getKlayPrice();
 };
 
 // 서버 시작시 처음 한 번 실행되는 함수들.
@@ -42,8 +42,17 @@ setInterval(function () {
 
 const setKlayPriceCheckTime = 1000 * 60 * 15; // 15분 단위
 setInterval(async function () {
-  klayPrice = await getKlayPrice();
+  // klayPrice = await getKlayPrice();
 }, setKlayPriceCheckTime);
+
+const setDayPriceCheckTime = 1000;
+setInterval(async function () {
+  let today = new Date();
+  let date = today.getDate();
+  let hour = today.getHours();
+
+  console.log(date, hour);
+}, setDayPriceCheckTime);
 
 /**
  * @path {GET} http://localhost:3000
