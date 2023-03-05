@@ -1,10 +1,16 @@
 var express = require("express");
 var router = express.Router();
+const basePath = process.cwd();
+const fs = require("fs");
+
 const {
   getInfo,
   createExportData,
   getKlayPrice,
 } = require("../public/javascripts/pala.js");
+
+const savedProjectList = require("../data/projectList.js");
+const { json } = require("body-parser");
 
 let projectList = [];
 let klayPrice = 0;
@@ -38,15 +44,28 @@ const init = async () => {
 // 서버 시작시 처음 한 번 실행되는 함수들.
 init();
 
+const readDayPrice = () => {
+  const path = `${basePath}/json/saveJSON.json`;
+  const jsonList = fs.readFileSync(path);
+  const list = JSON.parse(jsonList);
+
+  console.log("PuuvillaFriends : ", list["PuuvillaFriends"]);
+
+  return list;
+};
+
 const updateDayPrice = async () => {
   const result = await getRankinglist();
-  const list = result.data;
+  const data = result.data;
 
-  console.log(list);
-
-  for (let i = 0; i < list.length; i++) {
-    console.log(list[i].name, list[i].contractAddress, list[i].floor);
+  let list = {};
+  for (let i = 0; i < data.length; i++) {
+    list[data[i].name] = data[i].floor;
   }
+
+  const listJSON = JSON.stringify(list, null, 2);
+  const path = `${basePath}/json/saveJSON.json`;
+  fs.writeFileSync(path, listJSON);
 };
 
 // 주기적으로 ranking list set up
@@ -105,6 +124,12 @@ router.get("/api/ranking", async (req, res, next) => {
 
 router.get("/api/klayPrice", async (req, res, next) => {
   res.json(klayPrice);
+});
+
+router.get("/api/dayPrice", async (req, res, next) => {
+  const dayPriceList = readDayPrice();
+
+  res.json(dayPriceList);
 });
 
 module.exports = router;
