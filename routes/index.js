@@ -31,7 +31,32 @@ const getRankinglist = async () => {
   ];
 
   projectList = await createExportData(projectUrls);
+
+  dayPriceList = readDayPrice();
+  console.log(dayPriceList);
+  for (let i = 0; i < projectList.data.length; i++) {
+    const name = projectList.data[i].name;
+    const change = calDayPriceChange(
+      dayPriceList[name],
+      projectList.data[i].floor
+    );
+    projectList.data[i].change24h = change;
+  }
+
   return projectList;
+};
+
+const calDayPriceChange = (previousPrice, currentPrice) => {
+  const difference = currentPrice - previousPrice;
+  const percentageDifference = (difference / previousPrice) * 100;
+
+  if (difference > 0) {
+    return `+${percentageDifference.toFixed(2)}%`;
+  } else if (difference < 0) {
+    return `${percentageDifference.toFixed(2)}%`;
+  } else {
+    return "0%";
+  }
 };
 
 const init = async () => {
