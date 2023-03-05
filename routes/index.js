@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const basePath = process.cwd();
 const fs = require("fs");
+const schedule = require("node-schedule");
 
 const {
   getInfo,
@@ -35,9 +36,6 @@ const getRankinglist = async () => {
 
 const init = async () => {
   await getRankinglist();
-
-  await updateDayPrice();
-
   klayPrice = await getKlayPrice();
 };
 
@@ -60,7 +58,7 @@ const updateDayPrice = async () => {
 
   let list = {};
   for (let i = 0; i < data.length; i++) {
-    list[data[i].name] = data[i].floor - 10;
+    list[data[i].name] = data[i].floor;
   }
 
   const listJSON = JSON.stringify(list, null, 2);
@@ -68,25 +66,24 @@ const updateDayPrice = async () => {
   fs.writeFileSync(path, listJSON);
 };
 
-// 주기적으로 ranking list set up
-const setRankinglistTime = 1000 * 60 * 60; // 1시간 단위
-setInterval(function () {
+const setRankingList = schedule.scheduleJob("0 * * * *", function () {
   getRankinglist();
-}, setRankinglistTime);
+});
 
-const setKlayPriceCheckTime = 1000 * 60 * 15; // 15분 단위
-setInterval(async function () {
+const setKlayPrice = schedule.scheduleJob("*/15 * * * *", async function () {
   klayPrice = await getKlayPrice();
-}, setKlayPriceCheckTime);
+});
 
-const setDayPriceCheckTime = 1000;
-setInterval(async function () {
+const setDayPrice = schedule.scheduleJob("*/5 * * * * *", async function () {
   let today = new Date();
-  let date = today.getDate();
-  let hour = today.getHours();
 
-  // console.log(date, hour);
-}, setDayPriceCheckTime);
+  let hours = today.getHours(); // 시
+  let minutes = today.getMinutes(); // 분
+  let seconds = today.getSeconds(); // 초
+
+  console.log(today);
+  // await updateDayPrice();
+});
 
 /**
  * @path {GET} http://localhost:3000
