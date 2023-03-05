@@ -60,7 +60,7 @@ const updateDayPrice = async () => {
 
   let list = {};
   for (let i = 0; i < data.length; i++) {
-    list[data[i].name] = data[i].floor;
+    list[data[i].name] = data[i].floor - 10;
   }
 
   const listJSON = JSON.stringify(list, null, 2);
