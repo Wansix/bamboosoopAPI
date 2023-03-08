@@ -41,7 +41,7 @@ const getRankinglist = async () => {
     );
     const prePriceKRW = dayPriceList[name];
     const change = calDayPriceChange(prePriceKRW, currentPriceKRW);
-    const diffChange = prePriceKRW - currentPriceKRW;
+    const diffChange = currentPriceKRW - prePriceKRW;
     projectList.data[i].floorKRW = currentPriceKRW;
     projectList.data[i].change24h = change;
     projectList.data[i].changeDiff24h = diffChange.toFixed(0);
