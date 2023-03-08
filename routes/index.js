@@ -40,15 +40,31 @@ const getRankinglist = async () => {
       dayPriceList[name],
       projectList.data[i].floor
     );
+    const diffChange = calDiffChange(
+      dayPriceList[name],
+      projectList.data[i].floor
+    );
     projectList.data[i].change24h = change;
+    projectList.data[i].changeDiff24h = diffChange.toFixed(0);
   }
 
   return projectList;
 };
 
+const calDiffChange = (previousPrice, currentPrice) => {
+  const currentPriceKRW = currentPrice * klayPrice;
+  const previousPriceKRW = previousPrice * klayPrice;
+
+  return previousPriceKRW - currentPriceKRW;
+};
+
 const calDayPriceChange = (previousPrice, currentPrice) => {
-  const difference = currentPrice - previousPrice;
-  const percentageDifference = (difference / previousPrice) * 100;
+  const currentPriceKRW = currentPrice * klayPrice;
+  const previousPriceKRW = previousPrice * klayPrice;
+  console.log(currentPrice, previousPrice, currentPriceKRW, previousPriceKRW);
+
+  const difference = currentPriceKRW - previousPriceKRW;
+  const percentageDifference = (difference / previousPriceKRW) * 100;
 
   if (difference > 0) {
     return `+${percentageDifference.toFixed(2)}%`;
@@ -60,8 +76,8 @@ const calDayPriceChange = (previousPrice, currentPrice) => {
 };
 
 const init = async () => {
-  await getRankinglist();
   klayPrice = await getKlayPrice();
+  await getRankinglist();
 };
 
 // 서버 시작시 처음 한 번 실행되는 함수들.
@@ -91,15 +107,15 @@ const updateDayPrice = async () => {
   fs.writeFileSync(path, listJSON);
 };
 
-const setRankingList = schedule.scheduleJob("0 * * * *", function () {
+schedule.scheduleJob("0 * * * *", function () {
   getRankinglist();
 });
 
-const setKlayPrice = schedule.scheduleJob("*/15 * * * *", async function () {
+schedule.scheduleJob("*/15 * * * *", async function () {
   klayPrice = await getKlayPrice();
 });
 
-const setDayPrice = schedule.scheduleJob("0 0 * * *", async function () {
+schedule.scheduleJob("0 0 * * *", async function () {
   await updateDayPrice();
 });
 
