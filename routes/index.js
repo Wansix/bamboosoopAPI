@@ -36,14 +36,13 @@ const getRankinglist = async () => {
   // console.log(dayPriceList);
   for (let i = 0; i < projectList.data.length; i++) {
     const name = projectList.data[i].name;
-    const change = calDayPriceChange(
-      dayPriceList[name],
-      projectList.data[i].floor
+    const currentPriceKRW = Number(
+      (projectList.data[i].floor * klayPrice).toFixed(0)
     );
-    const diffChange = calDiffChange(
-      dayPriceList[name],
-      projectList.data[i].floor
-    );
+    const prePriceKRW = dayPriceList[name];
+    const change = calDayPriceChange(prePriceKRW, currentPriceKRW);
+    const diffChange = prePriceKRW - currentPriceKRW;
+    projectList.data[i].floorKRW = currentPriceKRW;
     projectList.data[i].change24h = change;
     projectList.data[i].changeDiff24h = diffChange.toFixed(0);
   }
@@ -51,19 +50,9 @@ const getRankinglist = async () => {
   return projectList;
 };
 
-const calDiffChange = (previousPrice, currentPrice) => {
-  const currentPriceKRW = currentPrice * klayPrice;
-  const previousPriceKRW = previousPrice * klayPrice;
-
-  return previousPriceKRW - currentPriceKRW;
-};
-
 const calDayPriceChange = (previousPrice, currentPrice) => {
-  const currentPriceKRW = currentPrice * klayPrice;
-  const previousPriceKRW = previousPrice * klayPrice;
-
-  const difference = currentPriceKRW - previousPriceKRW;
-  const percentageDifference = (difference / previousPriceKRW) * 100;
+  const difference = currentPrice - previousPrice;
+  const percentageDifference = (difference / previousPrice) * 100;
 
   if (difference > 0) {
     return `+${percentageDifference.toFixed(2)}%`;
@@ -96,7 +85,7 @@ const updateDayPrice = async () => {
 
   let list = {};
   for (let i = 0; i < data.length; i++) {
-    list[data[i].name] = data[i].floor;
+    list[data[i].name] = Number((data[i].floor * klayPrice).toFixed(0));
   }
 
   const listJSON = JSON.stringify(list, null, 2);
