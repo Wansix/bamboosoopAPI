@@ -33,7 +33,7 @@ const getRankinglist = async () => {
   projectList = await createExportData(projectUrls);
 
   dayPriceList = readDayPrice();
-  console.log(dayPriceList);
+  // console.log(dayPriceList);
   for (let i = 0; i < projectList.data.length; i++) {
     const name = projectList.data[i].name;
     const change = calDayPriceChange(
@@ -61,7 +61,6 @@ const calDiffChange = (previousPrice, currentPrice) => {
 const calDayPriceChange = (previousPrice, currentPrice) => {
   const currentPriceKRW = currentPrice * klayPrice;
   const previousPriceKRW = previousPrice * klayPrice;
-  console.log(currentPrice, previousPrice, currentPriceKRW, previousPriceKRW);
 
   const difference = currentPriceKRW - previousPriceKRW;
   const percentageDifference = (difference / previousPriceKRW) * 100;
@@ -87,8 +86,6 @@ const readDayPrice = () => {
   const path = `${basePath}/json/saveJSON.json`;
   const jsonList = fs.readFileSync(path);
   const list = JSON.parse(jsonList);
-
-  console.log("PuuvillaFriends : ", list["PuuvillaFriends"]);
 
   return list;
 };
