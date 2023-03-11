@@ -10,8 +10,8 @@ const {
   getKlayPrice,
 } = require("../public/javascripts/pala.js");
 
-const savedProjectList = require("../data/projectList.js");
-const { json } = require("body-parser");
+// const savedProjectList = require("../data/projectList.js");
+// const { json } = require("body-parser");
 
 let projectList = [];
 let klayPrice = 0;
@@ -33,7 +33,7 @@ const getRankinglist = async () => {
   projectList = await createExportData(projectUrls);
 
   dayPriceList = readDayPrice();
-  // console.log(dayPriceList);
+
   for (let i = 0; i < projectList.data.length; i++) {
     const name = projectList.data[i].name;
     const currentPriceKRW = Number(

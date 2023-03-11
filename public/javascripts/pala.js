@@ -1,4 +1,5 @@
 const axios = require("axios");
+require("dotenv").config();
 
 const UNIT = 1_000_000_000_000_000_000;
 
@@ -153,10 +154,7 @@ const getKlayPrice = async () => {
   const KRW_coinmarketcap_ID = "2798";
   const url = `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${klay_coinmarketcap_ID}&convert_id=${KRW_coinmarketcap_ID}`;
 
-  const mapUrl =
-    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?symbol=KLAY";
-
-  const apiKey = "e05e7f3a-21a8-4292-bbf7-58f201e8f333";
+  const apiKey = process.env.COINMARKETCAP_API_KEY;
   const response = await axios.get(url, {
     headers: {
       "X-CMC_PRO_API_KEY": apiKey,
