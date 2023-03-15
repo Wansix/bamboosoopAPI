@@ -105,48 +105,48 @@ schedule.scheduleJob("0 0 * * *", async function () {
   await updateDayPrice();
 });
 
-/**
- * @path {GET} http://localhost:3000
- * @description 메인
- */
-router.get("/", (req, res, next) => {
-  res.send("Bamboosoop");
-});
+// /**
+//  * @path {GET} http://localhost:3000
+//  * @description 메인
+//  */
+// router.get("/", (req, res, next) => {
+//   res.send("Bamboosoop");
+// });
 
-/**
- * @path {GET} http://localhost:3000/api/rankingList
- * @description 랭킹 리스트 반환 API
- */
-router.get("/api/rankingList", async (req, res, next) => {
-  res.json(projectList);
-});
+// /**
+//  * @path {GET} http://localhost:3000/api/rankingList
+//  * @description 랭킹 리스트 반환 API
+//  */
+// router.get("/api/rankingList", async (req, res, next) => {
+//   res.json(projectList);
+// });
 
-/**
- * @path {GET} http://localhost:3000/api/ranking
- * @description 랭킹 정보 반환 API
- */
-router.get("/api/ranking", async (req, res, next) => {
-  const id = req?.query?.id;
-  let result = {
-    code: "404",
-    msg: "Not Found",
-  };
+// /**
+//  * @path {GET} http://localhost:3000/api/ranking
+//  * @description 랭킹 정보 반환 API
+//  */
+// router.get("/api/ranking", async (req, res, next) => {
+//   const id = req?.query?.id;
+//   let result = {
+//     code: "404",
+//     msg: "Not Found",
+//   };
 
-  if (id) {
-    result = await getInfo(`https://klaytn.api.pala.world/projects/0x${id}`);
-  }
+//   if (id) {
+//     result = await getInfo(`https://klaytn.api.pala.world/projects/0x${id}`);
+//   }
 
-  res.json(result);
-});
+//   res.json(result);
+// });
 
-router.get("/api/klayPrice", async (req, res, next) => {
-  res.json(klayPrice);
-});
+// router.get("/api/klayPrice", async (req, res, next) => {
+//   res.json(klayPrice);
+// });
 
-router.get("/api/dayPrice", async (req, res, next) => {
-  const dayPriceList = readDayPrice();
+// router.get("/api/dayPrice", async (req, res, next) => {
+//   const dayPriceList = readDayPrice();
 
-  res.json(dayPriceList);
-});
+//   res.json(dayPriceList);
+// });
 
 module.exports = router;
